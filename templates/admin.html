@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>مدیریت ثبت‌نام‌ها</title>
+
+<style>
+body{
+    margin:0;
+    background:#101010;
+    color:#fff;
+    font-family:Tahoma,Arial,sans-serif;
+}
+.container{
+    width:96%;
+    margin:25px auto;
+}
+h1{
+    text-align:center;
+    margin-bottom:20px;
+}
+.info{
+    text-align:center;
+    margin-bottom:15px;
+    color:#d8ae55;
+}
+.table-wrap{
+    overflow-x:auto;
+    background:#181818;
+    border-radius:12px;
+}
+table{
+    width:100%;
+    min-width:1200px;
+    border-collapse:collapse;
+}
+th,td{
+    padding:10px 12px;
+    border:1px solid #333;
+    text-align:center;
+    white-space:nowrap;
+}
+th{
+    background:#252525;
+    color:#d8ae55;
+}
+tr:nth-child(even){
+    background:#151515;
+}
+tr:hover{
+    background:#222;
+}
+.number{
+    color:#d8ae55;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>📋 جدول ثبت‌نام‌ها</h1>
+
+<div class="info">
+تعداد ثبت‌نام‌ها: {{ registrations|length }}
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+    <th>ردیف</th>
+    <th>ID</th>
+    <th>نام و نام خانوادگی</th>
+    <th>شماره موبایل</th>
+    <th>سن</th>
+    <th>تاریخ تولد</th>
+    <th>کد ملی</th>
+    <th>استان</th>
+    <th>شهر</th>
+    <th>آدرس</th>
+    <th>کد پستی</th>
+    <th>کد معرف</th>
+    <th>تاریخ ثبت</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for r in registrations %}
+<tr>
+
+    <td class="number">{{ loop.index }}</td>
+    <td>{{ r['id'] }}</td>
+    <td>{{ r['full_name'] }}</td>
+    <td>{{ r['mobile'] }}</td>
+    <td>{{ r['age'] }}</td>
+    <td>{{ r['birth_date'] }}</td>
+    <td>{{ r['national_id'] }}</td>
+    <td>{{ r['province'] }}</td>
+    <td>{{ r['city'] }}</td>
+    <td>{{ r['address'] }}</td>
+    <td>{{ r['postal_code'] }}</td>
+    <td>{{ r['referral_code'] or '—' }}</td>
+    <td>{{ r['created_at'] }}</td>
+
+</tr>
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+</div>
+
+</body>
+</html>

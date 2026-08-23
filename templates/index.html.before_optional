@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOP FILM | قرعه‌کشی ویژه</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="page">
+
+    <header class="header">
+        <div class="brand">
+            <span class="brand-top">تاپ</span>
+            <span class="brand-film">فیلم</span>
+        </div>
+
+        <div class="header-line"></div>
+
+        <div class="badge">جشنواره ویژه ۱۴۰۵</div>
+    </header>
+
+    <main class="card">
+
+        <div class="icon">🎟️</div>
+
+        <h1>قرعه‌کشی ۱۰ بلیت ویژه</h1>
+
+        <div style="
+    margin: 16px 0 20px;
+    padding: 13px 16px;
+    border: 1px solid #d8ae55;
+    border-radius: 14px;
+    background: rgba(216,174,85,0.05);
+    text-align: center;
+">
+    <strong style="
+        color:#d8ae55;
+        font-size:13px;
+    ">
+        🎟️ با کد معرف، شانس شما چند برابر می‌شود
+    </strong>
+</div>
+
+
+<div style="
+    margin:16px 0 20px;
+    padding:15px;
+    border:1px solid #d8ae55;
+    border-radius:14px;
+    background:rgba(216,174,85,.05);
+    text-align:center;
+">
+    <div style="
+        color:#d8ae55;
+        font-size:13px;
+        font-weight:700;
+        margin-bottom:10px;
+    ">
+        🎟️ کد معرف شما
+    </div>
+
+    <div style="
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        gap:8px;
+    ">
+        <input
+            id="refCode"
+            value="{{ referral_generated or "" }}"
+            readonly
+            style="
+                width:165px;
+                text-align:center;
+                font-weight:700;
+                letter-spacing:1px;
+                padding:10px;
+            "
+        >
+
+        <button
+            type="button"
+            onclick="copyReferral()"
+            style="
+                width:auto;
+                margin:0;
+                padding:10px 15px;
+                font-size:12px;
+            "
+        >
+            کپی
+        </button>
+    </div>
+
+    <div style="
+        color:#999;
+        font-size:11px;
+        margin-top:8px;
+    ">
+        کد خود را برای دوستانتان ارسال کنید.
+    </div>
+</div>
+
+<script>
+function copyReferral() {
+    const code = document.getElementById("refCode").value;
+
+    navigator.clipboard.writeText(code).then(function() {
+        alert("کد معرف کپی شد");
+    });
+}
+</script>
+
+<p class="subtitle">
+            با تکمیل فرم ثبت‌نام، در قرعه‌کشی ویژه TOP FILM شرکت کنید.
+        </p>
+
+        <div class="prizes">
+
+            <div class="prize">
+                <span>🎟️</span>
+                <strong>۱۰ بلیت</strong>
+                <small>۱۰ برنده، هر نفر یک بلیت</small>
+            </div>
+
+            <div class="prize">
+                <span>🏆</span>
+                <strong>۱۰ برنده</strong>
+                <small>انتخاب به‌صورت قرعه‌کشی</small>
+            </div>
+
+        </div>
+
+        {% if success %}
+
+        <div class="success">
+            <div class="success-icon">✓</div>
+
+            <h2>ثبت‌نام با موفقیت انجام شد</h2>
+
+            <p>
+                اطلاعات شما برای شرکت در جشنواره ثبت گردید.
+            </p>
+
+            {% if referral_generated %}
+            <div style="
+                margin:20px auto;
+                max-width:390px;
+                padding:14px 16px;
+                border:1px solid #d8ae55;
+                border-radius:15px;
+                background:rgba(216,174,85,.05);
+            ">
+                <div style="
+                    color:#d8ae55;
+                    font-size:13px;
+                    font-weight:700;
+                    margin-bottom:10px;
+                ">
+                    🎟️ کد معرف اختصاصی شما
+                </div>
+
+                <div style="
+                    display:flex;
+                    align-items:center;
+                    gap:8px;
+                    justify-content:center;
+                ">
+                    <input
+                        id="myReferral"
+                        value="{{ referral_generated or "" }}"
+                        readonly
+                        style="
+                            width:170px;
+                            text-align:center;
+                            font-weight:700;
+                            letter-spacing:1px;
+                            padding:11px;
+                        "
+                    >
+
+                    <button
+                        type="button"
+                        onclick="copyReferral()"
+                        style="
+                            width:auto;
+                            margin:0;
+                            padding:11px 16px;
+                            font-size:12px;
+                        "
+                    >
+                        کپی
+                    </button>
+                </div>
+
+                <div style="
+                    color:#999;
+                    font-size:11px;
+                    margin-top:9px;
+                ">
+                    با کد معرف، شانس شما چند برابر می‌شود.
+                </div>
+            </div>
+
+            <script>
+            function copyReferral() {
+                const input = document.getElementById("myReferral");
+                navigator.clipboard.writeText(input.value);
+
+                const btn = event.currentTarget;
+                const oldText = btn.innerText;
+                btn.innerText = "کپی شد ✓";
+
+                setTimeout(() => {
+                    btn.innerText = oldText;
+                }, 1500);
+            }
+            </script>
+            {% endif %}
+        </div>
+
+        {% else %}
+
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST">
+
+            <div class="section-title">اطلاعات شخصی</div>
+
+            <label>نام و نام خانوادگی</label>
+            <input
+                type="text"
+                name="full_name"
+                placeholder="نام و نام خانوادگی"
+                required
+            >
+
+            <label>شماره موبایل</label>
+            <input
+                type="tel"
+                name="mobile"
+                placeholder="09xxxxxxxxx"
+                maxlength="11"
+                inputmode="numeric"
+                required
+            >
+
+            <label>شماره تلفن پدر <span class="optional">اختیاری</span></label>
+            <input
+                type="tel"
+                name="father_mobile"
+                placeholder="جهت در دسترس نبودن شماره همراه"
+                maxlength="11"
+                inputmode="numeric"
+            >
+
+            <label>سن</label>
+<input
+    type="number"
+    name="age"
+    placeholder="سن"
+    min="1"
+    max="120"
+    inputmode="numeric"
+    required
+>
+
+<label>تاریخ تولد</label>
+            <input
+                type="text"
+                name="birth_date"
+                placeholder="مثلاً 1388/05/20"
+                required
+            >
+
+            <label>کد ملی</label>
+            <input
+                type="text"
+                name="national_id"
+                placeholder="کد ملی ۱۰ رقمی"
+                maxlength="10"
+                inputmode="numeric"
+                required
+            >
+
+            <div class="section-title">اطلاعات محل سکونت</div>
+
+            <label>استان</label>
+            <input
+                type="text"
+                name="province"
+                placeholder="استان"
+                required
+            >
+
+            <label>شهر</label>
+            <input
+                type="text"
+                name="city"
+                placeholder="شهر"
+                required
+            >
+
+            <label>آدرس کامل</label>
+            <textarea
+                name="address"
+                placeholder="آدرس محل سکونت"
+                required
+            ></textarea>
+
+            <label>کد پستی</label>
+            <input
+                type="text"
+                name="postal_code"
+                placeholder="کد پستی ۱۰ رقمی"
+                maxlength="10"
+                inputmode="numeric"
+                required
+            >
+
+            
+<div style="
+    margin: 20px 0;
+    padding: 16px;
+    border: 1px solid #d8ae55;
+    border-radius: 15px;
+    background: rgba(216,174,85,0.06);
+    text-align: center;
+">
+    <div style="font-size: 20px; margin-bottom: 7px;">🎟️</div>
+    <strong style="color:#d8ae55; font-size:14px;">
+        با کد معرف، شانس شما چند برابر می‌شود
+    </strong>
+    <p style="color:#999; font-size:11px; margin:8px 0 0; line-height:1.9;">
+        کد معرف دوستان خود را وارد کنید تا شانس بیشتری برای برنده شدن داشته باشید.
+    </p>
+</div>
+
+<div class="section-title">کد معرف</div>
+
+            <label>
+                کد معرف
+                <span class="optional">اختیاری</span>
+            </label>
+
+            <input
+                type="text"
+                name="referral_code"
+                placeholder=""
+            >
+
+            
+<label class="terms">
+    <input type="checkbox" required>
+    <span>
+        قوانین و حریم خصوصی جشنواره را مطالعه کرده‌ام و می‌پذیرم.
+    </span>
+</label>
+
+<button type="submit">
+                ثبت‌نام در قرعه‌کشی
+                <span>←</span>
+            </button>
+
+        </form>
+
+        {% endif %}
+
+        <div class="rules">
+
+            <h3>قوانین جشنواره</h3>
+
+            <p>
+                پس از پایان مهلت ثبت‌نام، ۱۰ نفر از میان
+                شرکت‌کنندگان واجد شرایط به‌صورت قرعه‌کشی انتخاب می‌شوند.
+            </p>
+
+            <p>
+                به هر برنده یک بلیت تعلق خواهد گرفت.
+            </p>
+
+            <p>
+                نتیجه قرعه‌کشی از طریق شماره موبایل ثبت‌شده
+                به برندگان اعلام خواهد شد.
+            </p>
+
+            <p>
+                هر شخص تنها یک بار مجاز به ثبت‌نام است.
+            </p>
+
+        </div>
+
+    </main>
+
+    <footer>
+        © ۱۴۰۵ TOP FILM
+    </footer>
+
+</div>
+
+</body>
+</html>

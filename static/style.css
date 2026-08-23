@@ -1,0 +1,329 @@
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Vazirmatn", Tahoma, sans-serif;
+    background:
+        radial-gradient(circle at top, #252525 0%, #0d0d0d 48%, #050505 100%);
+    color: #fff;
+    min-height: 100vh;
+}
+
+.page {
+    width: 100%;
+    max-width: 720px;
+    margin: auto;
+    padding: 25px 15px 40px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 22px;
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    font-size: 34px;
+}
+
+.brand-top {
+    color: #ffffff;
+}
+
+.brand-film {
+    color: #d8ae55;
+}
+
+.header-line {
+    width: 80px;
+    height: 3px;
+    margin: 9px auto 12px;
+    background: #d8ae55;
+    border-radius: 10px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 7px 16px;
+    border: 1px solid #554522;
+    border-radius: 30px;
+    color: #d8ae55;
+    font-size: 12px;
+}
+
+.card {
+    background: rgba(20, 20, 20, .94);
+    border: 1px solid #292929;
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 0 20px 70px rgba(0,0,0,.5);
+}
+
+.icon {
+    width: 65px;
+    height: 65px;
+    margin: 0 auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #181818;
+    border: 1px solid #3c321f;
+    border-radius: 20px;
+    font-size: 30px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 24px;
+    margin: 0 0 10px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #aaa;
+    line-height: 2;
+    font-size: 14px;
+}
+
+.prizes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 25px 0;
+}
+
+.prize {
+    text-align: center;
+    padding: 18px 10px;
+    background: #151515;
+    border: 1px solid #292929;
+    border-radius: 17px;
+}
+
+.prize span {
+    display: block;
+    font-size: 25px;
+    margin-bottom: 7px;
+}
+
+.prize strong {
+    display: block;
+    color: #d8ae55;
+}
+
+.prize small {
+    display: block;
+    color: #8e8e8e;
+    margin-top: 5px;
+    font-size: 11px;
+}
+
+.section-title {
+    color: #d8ae55;
+    font-size: 14px;
+    font-weight: 700;
+    margin: 25px 0 14px;
+    padding-right: 10px;
+    border-right: 3px solid #d8ae55;
+}
+
+label {
+    display: block;
+    color: #ddd;
+    font-size: 13px;
+    margin: 15px 0 7px;
+}
+
+.optional {
+    color: #777;
+    font-size: 10px;
+    margin-right: 5px;
+}
+
+input,
+textarea {
+    width: 100%;
+    border: 1px solid #303030;
+    background: #0d0d0d;
+    color: #fff;
+    border-radius: 13px;
+    padding: 14px;
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+    transition: .2s;
+}
+
+input:focus,
+textarea:focus {
+    border-color: #b08a3c;
+    box-shadow: 0 0 0 3px rgba(216,174,85,.08);
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.terms {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    color: #aaa;
+    line-height: 1.8;
+    margin-top: 20px;
+}
+
+.terms input {
+    width: 18px;
+    height: 18px;
+    margin-top: 4px;
+    accent-color: #d8ae55;
+}
+
+button {
+    width: 100%;
+    border: 0;
+    border-radius: 14px;
+    margin-top: 20px;
+    padding: 15px;
+    background: linear-gradient(135deg, #d8ae55, #a77d2d);
+    color: #111;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: .2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+button span {
+    margin-right: 8px;
+}
+
+.rules {
+    margin-top: 28px;
+    padding: 18px;
+    background: #101010;
+    border: 1px solid #252525;
+    border-radius: 16px;
+}
+
+.rules h3 {
+    color: #d8ae55;
+    font-size: 14px;
+    margin-top: 0;
+}
+
+.rules p {
+    color: #999;
+    font-size: 11px;
+    line-height: 2;
+    margin-bottom: 7px;
+}
+
+.success {
+    text-align: center;
+    padding: 35px 10px;
+}
+
+.success-icon {
+    width: 65px;
+    height: 65px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #17251a;
+    color: #63c174;
+    font-size: 30px;
+}
+
+.success h2 {
+    margin-bottom: 8px;
+}
+
+.success p {
+    color: #999;
+}
+
+.error {
+    padding: 12px;
+    background: #321515;
+    color: #ff9b9b;
+    border: 1px solid #572323;
+    border-radius: 12px;
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+footer {
+    text-align: center;
+    color: #555;
+    font-size: 10px;
+    margin-top: 22px;
+}
+
+@media (max-width: 600px) {
+
+    .page {
+        padding: 18px 10px 30px;
+    }
+
+    .card {
+        padding: 21px 17px;
+        border-radius: 20px;
+    }
+
+    h1 {
+        font-size: 21px;
+    }
+
+    .prizes {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .brand {
+        font-size: 30px;
+    }
+}
+
+/* فقط فیلد کد معرف */
+input[name="referral_code"] {
+    background: #0d0d0d !important;
+    color: #ffffff !important;
+}
+
+input[name="referral_code"]::placeholder {
+    color: #777 !important;
+}
+
+
+/* نمایش واضح کد معرف */
+#refCode {
+    color: #ffffff !important;
+    background: #0d0d0d !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+/* فقط نوشته دکمه کپی */
+button[onclick="copyReferral()"] {
+    color: #ffffff !important;
+}
+
+/* فقط نوشته دکمه کپی */
+button[onclick="copyReferral()"] {
+    color: #ffffff !important;
+}
