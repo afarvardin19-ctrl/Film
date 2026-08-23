@@ -5,7 +5,8 @@ import secrets
 
 app = Flask(__name__)
 
-DB = "/data/data/com.termux/files/home/storage/shared/قرعه کشی/top_film.db"
+import os
+DB = os.path.join(os.path.dirname(__file__), "top_film.db")
 
 
 def init_db():
@@ -145,6 +146,8 @@ def admin():
     )
 
 
+init_db()
+
 if __name__ == "__main__":
-    init_db()
+    pass
     app.run(host="0.0.0.0", port=8081, debug=False)
