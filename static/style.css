@@ -327,3 +327,25 @@ button[onclick="copyReferral()"] {
 button[onclick="copyReferral()"] {
     color: #ffffff !important;
 }
+
+/* فرم ثبت‌نام - فاصله فشرده‌تر */
+form label {
+    margin-top: 8px !important;
+    margin-bottom: 4px !important;
+}
+
+form input,
+form textarea,
+form select {
+    margin-bottom: 8px !important;
+}
+
+form textarea {
+    min-height: 80px;
+}
+
+.section-title {
+    margin-top: 14px !important;
+    margin-bottom: 8px !important;
+}
+
