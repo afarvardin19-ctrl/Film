@@ -1,47 +1,73 @@
 from flask import Flask, render_template, request
 import sqlite3
-from datetime import datetime
+import os
 import secrets
+from datetime import datetime
+
+import psycopg2
+from psycopg2.extras import RealDictCursor
 
 app = Flask(__name__)
 
-import os
+DATABASE_URL = os.environ.get("DATABASE_URL")
 DB = os.path.join(os.path.dirname(__file__), "top_film.db")
 
 
+def get_connection():
+    if DATABASE_URL:
+        return psycopg2.connect(DATABASE_URL)
+    return sqlite3.connect(DB)
+
+
 def init_db():
-    conn = sqlite3.connect(DB)
+    conn = get_connection()
 
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS registrations (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            full_name TEXT NOT NULL,
-            mobile TEXT NOT NULL,
-            father_mobile TEXT,
-            age TEXT NOT NULL,
-            birth_date TEXT NOT NULL,
-            national_id TEXT NOT NULL,
-            province TEXT NOT NULL,
-            city TEXT NOT NULL,
-            address TEXT NOT NULL,
-            postal_code TEXT NOT NULL,
-            referral_code TEXT,
-            created_at TEXT NOT NULL
-        )
-    """)
+    if DATABASE_URL:
+        cursor = conn.cursor()
 
-    try:
-        conn.execute("ALTER TABLE registrations ADD COLUMN father_mobile TEXT")
-    except sqlite3.OperationalError:
-        pass
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS registrations (
+                id SERIAL PRIMARY KEY,
+                full_name TEXT NOT NULL,
+                mobile TEXT NOT NULL,
+                father_mobile TEXT,
+                age TEXT NOT NULL,
+                birth_date TEXT NOT NULL,
+                national_id TEXT NOT NULL,
+                province TEXT NOT NULL,
+                city TEXT NOT NULL,
+                address TEXT NOT NULL,
+                postal_code TEXT NOT NULL,
+                referral_code TEXT,
+                created_at TEXT NOT NULL
+            )
+        """)
 
-    try:
-        conn.execute("ALTER TABLE registrations ADD COLUMN age TEXT")
-    except sqlite3.OperationalError:
-        pass
+        conn.commit()
+        cursor.close()
+        conn.close()
 
-    conn.commit()
-    conn.close()
+    else:
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS registrations (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                full_name TEXT NOT NULL,
+                mobile TEXT NOT NULL,
+                father_mobile TEXT,
+                age TEXT NOT NULL,
+                birth_date TEXT NOT NULL,
+                national_id TEXT NOT NULL,
+                province TEXT NOT NULL,
+                city TEXT NOT NULL,
+                address TEXT NOT NULL,
+                postal_code TEXT NOT NULL,
+                referral_code TEXT,
+                created_at TEXT NOT NULL
+            )
+        """)
+
+        conn.commit()
+        conn.close()
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -79,10 +105,35 @@ def index():
             error = "لطفاً تمام فیلدهای الزامی را تکمیل کنید."
         else:
             try:
-                conn = sqlite3.connect(DB)
+                conn = get_connection()
 
-                conn.execute("""
-                    INSERT INTO registrations (
+                created_at = datetime.now().strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                )
+
+                if DATABASE_URL:
+                    cursor = conn.cursor()
+
+                    cursor.execute("""
+                        INSERT INTO registrations (
+                            full_name,
+                            mobile,
+                            father_mobile,
+                            age,
+                            birth_date,
+                            national_id,
+                            province,
+                            city,
+                            address,
+                            postal_code,
+                            referral_code,
+                            created_at
+                        )
+                        VALUES (
+                            %s, %s, %s, %s, %s, %s,
+                            %s, %s, %s, %s, %s, %s
+                        )
+                    """, (
                         full_name,
                         mobile,
                         father_mobile,
@@ -95,22 +146,41 @@ def index():
                         postal_code,
                         referral_code,
                         created_at
-                    )
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """, (
-                    full_name,
-                    mobile,
-                    father_mobile,
-                    age,
-                    birth_date,
-                    national_id,
-                    province,
-                    city,
-                    address,
-                    postal_code,
-                    referral_code,
-                    datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                ))
+                    ))
+
+                    cursor.close()
+
+                else:
+                    conn.execute("""
+                        INSERT INTO registrations (
+                            full_name,
+                            mobile,
+                            father_mobile,
+                            age,
+                            birth_date,
+                            national_id,
+                            province,
+                            city,
+                            address,
+                            postal_code,
+                            referral_code,
+                            created_at
+                        )
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """, (
+                        full_name,
+                        mobile,
+                        father_mobile,
+                        age,
+                        birth_date,
+                        national_id,
+                        province,
+                        city,
+                        address,
+                        postal_code,
+                        referral_code,
+                        created_at
+                    ))
 
                 conn.commit()
                 conn.close()
@@ -131,12 +201,28 @@ def index():
 
 @app.route("/admin")
 def admin():
-    conn = sqlite3.connect(DB)
-    conn.row_factory = sqlite3.Row
+    conn = get_connection()
 
-    registrations = conn.execute(
-        "SELECT * FROM registrations ORDER BY id ASC"
-    ).fetchall()
+    if DATABASE_URL:
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+        cursor.execute("""
+            SELECT *
+            FROM registrations
+            ORDER BY id ASC
+        """)
+
+        registrations = cursor.fetchall()
+        cursor.close()
+
+    else:
+        conn.row_factory = sqlite3.Row
+
+        registrations = conn.execute("""
+            SELECT *
+            FROM registrations
+            ORDER BY id ASC
+        """).fetchall()
 
     conn.close()
 
@@ -148,6 +234,9 @@ def admin():
 
 init_db()
 
+
 if __name__ == "__main__":
-    pass
-    app.run(host="0.0.0.0", port=8081, debug=False)
+    app.run(
+        host="0.0.0.0",
+        port=int(os.environ.get("PORT", 10000))
+    )
