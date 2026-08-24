@@ -349,3 +349,24 @@ form textarea {
     margin-bottom: 8px !important;
 }
 
+
+/* فاصله فیلدهای فرم */
+form label {
+    margin-top: 9px !important;
+    margin-bottom: 4px !important;
+}
+
+form input:not([type="checkbox"]),
+form textarea {
+    padding: 11px 13px !important;
+}
+
+form textarea {
+    min-height: 80px !important;
+}
+
+form .section-title {
+    margin-top: 17px !important;
+    margin-bottom: 8px !important;
+}
+
