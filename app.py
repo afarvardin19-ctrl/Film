@@ -96,8 +96,8 @@ def index():
         full_name = request.form.get("full_name", "").strip()
         mobile = request.form.get("mobile", "").strip()
         father_mobile = request.form.get("father_mobile", "").strip()
-        age = request.form.get("age", "").strip()
-        birth_date = request.form.get("birth_date", "").strip()
+        age = ""
+        birth_date = ""
         national_id = request.form.get("national_id", "").strip()
         province = request.form.get("province", "").strip()
         city = request.form.get("city", "").strip()
@@ -107,9 +107,7 @@ def index():
 
         required = [
             full_name,
-            age,
             mobile,
-            birth_date,
             national_id,
             province,
             city,
