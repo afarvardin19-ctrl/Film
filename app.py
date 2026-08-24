@@ -21,10 +21,9 @@ def get_connection():
 
 def init_db():
     conn = get_connection()
+    cursor = conn.cursor()
 
     if DATABASE_URL:
-        cursor = conn.cursor()
-
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS registrations (
                 id SERIAL PRIMARY KEY,
@@ -42,13 +41,8 @@ def init_db():
                 created_at TEXT NOT NULL
             )
         """)
-
-        conn.commit()
-        cursor.close()
-        conn.close()
-
     else:
-        conn.execute("""
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS registrations (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 full_name TEXT NOT NULL,
@@ -66,9 +60,31 @@ def init_db():
             )
         """)
 
-        conn.commit()
-        conn.close()
+    conn.commit()
 
+    try:
+        if DATABASE_URL:
+            cursor.execute("""
+                ALTER TABLE registrations
+                ADD COLUMN IF NOT EXISTS father_mobile TEXT
+            """)
+        else:
+            columns = [row[1] for row in cursor.execute(
+                "PRAGMA table_info(registrations)"
+            ).fetchall()]
+
+            if "father_mobile" not in columns:
+                cursor.execute("""
+                    ALTER TABLE registrations
+                    ADD COLUMN father_mobile TEXT
+                """)
+
+        conn.commit()
+
+    except Exception as e:
+        print("DB migration:", e)
+
+    conn.close()
 
 @app.route("/", methods=["GET", "POST"])
 def index():
