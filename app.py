@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, render_template_string, request
 import sqlite3
 import os
 import secrets
@@ -215,37 +215,168 @@ def index():
     )
 
 
+
+@app.route("/db-viewer")
+def db_viewer():
+    conn = get_connection()
+
+    try:
+        if DATABASE_URL:
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
+            cursor.execute("SELECT * FROM registrations ORDER BY id DESC")
+            rows = cursor.fetchall()
+            cursor.close()
+            database_type = "PostgreSQL / Render"
+        else:
+            conn.row_factory = sqlite3.Row
+            rows = conn.execute(
+                "SELECT * FROM registrations ORDER BY id DESC"
+            ).fetchall()
+            database_type = "SQLite / Local"
+
+        columns = list(rows[0].keys()) if rows else []
+
+        html = """
+        <!doctype html>
+        <html lang="fa" dir="rtl">
+        <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>مرورگر دیتابیس TOP FILM</title>
+        <style>
+        body{
+            background:#10131a;
+            color:#fff;
+            font-family:Tahoma,Arial,sans-serif;
+            margin:20px;
+        }
+        h1{text-align:center}
+        .info{
+            background:#181d27;
+            padding:15px;
+            border-radius:12px;
+            margin-bottom:20px;
+        }
+        .table-wrap{overflow-x:auto}
+        table{
+            width:100%;
+            border-collapse:collapse;
+            background:#181d27;
+        }
+        th,td{
+            padding:10px;
+            border:1px solid #333;
+            text-align:right;
+            white-space:nowrap;
+        }
+        th{background:#252c3b}
+        .count{
+            font-size:18px;
+            font-weight:bold;
+        }
+        </style>
+        </head>
+        <body>
+        <h1>🎬 مرورگر دیتابیس TOP FILM</h1>
+
+        <div class="info">
+            <div>دیتابیس فعال: <strong>{{ database_type }}</strong></div>
+            <div>تعداد رکوردها: <span class="count">{{ rows|length }}</span></div>
+        </div>
+
+        <div class="table-wrap">
+        <table>
+        {% if columns %}
+        <tr>
+        {% for col in columns %}
+            <th>{{ col }}</th>
+        {% endfor %}
+        </tr>
+
+        {% for row in rows %}
+        <tr>
+        {% for col in columns %}
+            <td>{{ row[col] }}</td>
+        {% endfor %}
+        </tr>
+        {% endfor %}
+
+        {% else %}
+        <tr><td>هیچ رکوردی وجود ندارد.</td></tr>
+        {% endif %}
+        </table>
+        </div>
+
+        </body>
+        </html>
+        """
+
+        return render_template_string(
+            html,
+            rows=rows,
+            columns=columns,
+            database_type=database_type
+        )
+
+    finally:
+        conn.close()
+
 @app.route("/admin")
 def admin():
     conn = get_connection()
-
-    if DATABASE_URL:
-        cursor = conn.cursor(cursor_factory=RealDictCursor)
-
-        cursor.execute("""
-            SELECT *
-            FROM registrations
-            ORDER BY id ASC
-        """)
-
-        registrations = cursor.fetchall()
-        cursor.close()
-
-    else:
-        conn.row_factory = sqlite3.Row
-
-        registrations = conn.execute("""
-            SELECT *
-            FROM registrations
-            ORDER BY id ASC
-        """).fetchall()
-
-    conn.close()
+    try:
+        if DATABASE_URL:
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
+            cursor.execute("""
+                SELECT *
+                FROM registrations
+                ORDER BY id ASC
+            """)
+            registrations = cursor.fetchall()
+            cursor.close()
+        else:
+            conn.row_factory = sqlite3.Row
+            registrations = conn.execute("""
+                SELECT *
+                FROM registrations
+                ORDER BY id ASC
+            """).fetchall()
+    finally:
+        conn.close()
 
     return render_template(
         "admin.html",
         registrations=registrations
     )
+
+
+@app.route("/admin/delete/<int:registration_id>", methods=["POST"])
+def delete_registration(registration_id):
+    conn = get_connection()
+
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            "DELETE FROM registrations WHERE id = %s"
+            if DATABASE_URL
+            else "DELETE FROM registrations WHERE id = ?",
+            (registration_id,)
+        )
+
+        if cursor.rowcount == 0:
+            conn.rollback()
+            return "رکورد پیدا نشد", 404
+
+        conn.commit()
+
+    except Exception:
+        conn.rollback()
+        raise
+
+    finally:
+        conn.close()
+
+    return redirect("/admin")
 
 
 init_db()
